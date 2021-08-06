@@ -1,61 +1,49 @@
 <?php
 
 declare(strict_types=1);
+
+
 namespace Baraja\Gravatar;
+
 use Nette\Utils\Validators;
 
 class Gravatar
 {
-	private string $email;
-	private string $hash;
+	private function normalizeEmail(string $email): string
+	{
+		if (Validators::isEmail($email) === false) {
+			throw new \InvalidArgumentException('E-mail "' . $email . '" is not valid.');
+		}
+
+		$email = trim($email);
+
+		return strtolower($email);
+	}
+
 
 	public function getIcon(string $email): string
 	{
+		$email = $this->normalizeEmail($email);
+		$hash = md5($email);
 
-		if (!Validators::isEmail($email)) {
-			throw new InvalidArgumentException("invalid email");
-		}
-
-		$email = trim( $email );
-		$email = strtolower( $email );
-
-		$this->email = $email;
-		$this->hash = md5( $email );
-
-		return "https://www.gravatar.com/avatar/".$this->hash;
+		return "https://www.gravatar.com/avatar/" . urlencode($hash);
 	}
 
-	public function getUserInfo(string $email): void
+
+	public function getUserInfo(string $email): GravatarResponse
 	{
-		if (!Validators::isEmail($email)) {
-			throw new InvalidArgumentException("invalid email");
-		}
+		$email = $this->normalizeEmail($email);
 
-		$email = trim( $email );
-		$email = strtolower( $email );
+		$hash = md5($email);
 
-		$this->email = $email;
-		$this->hash = md5( $email );
+		$url = 'https://en.gravatar.com/' . urlencode($hash) . '.php';
 
-		$url = 'https://en.gravatar.com/'.$this->hash.'.php';
-		$data = unserialize((string) file_get_contents($url));
+		$data = @file_get_contents($url);
+		if ($data === false)
+			throw new \InvalidArgumentException('User "' . $email . '" does not exist.');
 
-		print_r($data);
+		$data = unserialize((string)$data);
+
+		return new GravatarResponse($data);
 	}
-}
-
-class GravatarResponse
-{
-	private string $id;
-	private string $hash;
-	private string $preferredUsername;
-	private string $thumbnailUrl;
-	private string $givenName;
-	private string $familyName;
-	private string $formatted;
-	private string $displayName;
-	private string $aboutMe;
-	private array $urls;
-	//urls (array<string, string> ve tvaru URL => popis)
-
 }
