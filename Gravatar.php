@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Nette\Utils\Validators;
 
 class Gravatar
@@ -9,11 +11,11 @@ class Gravatar
 
 	public function getIcon(string $email): string
 	{
-		/*
+
 		if (!Validators::isEmail($email)) {
 			throw new InvalidArgumentException("invalid email");
 		}
-		*/
+
 		$email = trim( $email );
 		$email = strtolower( $email );
 
@@ -25,6 +27,10 @@ class Gravatar
 
 	public function getUserInfo(string $email): void
 	{
+		if (!Validators::isEmail($email)) {
+			throw new InvalidArgumentException("invalid email");
+		}
+
 		$email = trim( $email );
 		$email = strtolower( $email );
 
@@ -53,10 +59,3 @@ class GravatarResponse
 	//urls (array<string, string> ve tvaru URL => popis)
 
 }
-
-
-$gravatar = new Gravatar;
-
-echo $gravatar->getIcon('jan@barasek.com');
-
-$gravatar->getUserInfo('jan@barasek.com');
