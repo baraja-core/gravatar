@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Baraja\Gravatar;
 
 use Nette\Utils\Validators;
@@ -26,7 +25,7 @@ class Gravatar
 		$email = $this->normalizeEmail($email);
 		$hash = md5($email);
 
-		return "https://www.gravatar.com/avatar/" . urlencode($hash);
+		return 'https://www.gravatar.com/avatar/' . urlencode($hash);
 	}
 
 
@@ -39,10 +38,11 @@ class Gravatar
 		$url = 'https://en.gravatar.com/' . urlencode($hash) . '.php';
 
 		$data = @file_get_contents($url);
-		if ($data === false)
+		if ($data === false) {
 			throw new \InvalidArgumentException('User "' . $email . '" does not exist.');
+		}
 
-		$data = unserialize((string)$data);
+		$data = unserialize($data);
 
 		return new GravatarResponse($data);
 	}
