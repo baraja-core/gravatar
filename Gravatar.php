@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+namespace Baraja\Gravatar;
 use Nette\Utils\Validators;
 
 class Gravatar
