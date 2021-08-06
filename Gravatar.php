@@ -54,6 +54,7 @@ class GravatarResponse
 
 }
 
+
 $gravatar = new Gravatar;
 
 echo $gravatar->getIcon('jan@barasek.com');
