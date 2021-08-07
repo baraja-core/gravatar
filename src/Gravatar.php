@@ -43,11 +43,7 @@ class Gravatar
 			throw new \InvalidArgumentException('User "' . $email . '" does not exist.');
 		}
 
-		try {
-			$data = unserialize($data);
-		} catch (Exception $e) {
-			echo 'Caught exception: ', $e->getMessage(), '\n';
-		}
+		$data = unserialize($data);
 		if (is_array($data) === false) {
 			throw new \InvalidArgumentException('User "' . $email . '" does not exist.');
 		}
