@@ -4,23 +4,32 @@ declare(strict_types=1);
 
 namespace Baraja\Gravatar;
 
-class GravatarResponse
+final class GravatarResponse
 {
 	private int $id;
+
 	private string $hash;
+
 	private string $preferredUsername;
+
 	private string $thumbnailUrl;
+
 	private ?string $givenName;
+
 	private ?string $familyName;
+
 	private ?string $formatted;
+
 	private ?string $displayName;
+
 	private ?string $aboutMe;
+
 	/** @var array<string, string> */
-	private ?array $urls;
+	private array $urls = [];
 
 
 	/**
-	 * @param array<string, array> $profile
+	 * @param array<string, mixed> $profile
 	 */
 	public function __construct(array $profile)
 	{
@@ -34,12 +43,8 @@ class GravatarResponse
 		$this->displayName = $profile['entry'][0]['displayName'] ?? null;
 		$this->aboutMe = $profile['entry'][0]['aboutMe'] ?? null;
 
-		if (isset($profile['entry'][0]['urls'][0])) {
-			foreach ($profile['entry'][0]['urls'] as $url) {
-				$this->urls[$url['value']] = $url['title'];
-			}
-		} else {
-			$this->urls = null;
+		foreach ($profile['entry'][0]['urls'] ?? [] as $url) {
+			$this->urls[$url['value']] = $url['title'];
 		}
 	}
 
@@ -99,9 +104,9 @@ class GravatarResponse
 
 
 	/**
-	 * @return array<string, string> | null
+	 * @return array<string, string>
 	 */
-	public function getUrls(): ?array
+	public function getUrls(): array
 	{
 		return $this->urls;
 	}
