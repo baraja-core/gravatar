@@ -18,6 +18,7 @@ class GravatarResponse
 	/** @var array<string, string> */
 	private ?array $urls;
 
+
 	/**
 	 * @param array<string, array> $profile
 	 */
@@ -97,6 +98,9 @@ class GravatarResponse
 	}
 
 
+	/**
+	 * @return array<string, string> | null
+	 */
 	public function getUrls(): ?array
 	{
 		return $this->urls;
