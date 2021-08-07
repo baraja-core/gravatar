@@ -38,11 +38,19 @@ class Gravatar
 		$url = 'https://en.gravatar.com/' . urlencode($hash) . '.php';
 
 		$data = @file_get_contents($url);
+
 		if ($data === false) {
 			throw new \InvalidArgumentException('User "' . $email . '" does not exist.');
 		}
 
-		$data = unserialize($data);
+		try {
+			$data = unserialize($data);
+		} catch (Exception $e) {
+			echo 'Caught exception: ', $e->getMessage(), '\n';
+		}
+		if (is_array($data) === false) {
+			throw new \InvalidArgumentException('User "' . $email . '" does not exist.');
+		}
 
 		return new GravatarResponse($data);
 	}
