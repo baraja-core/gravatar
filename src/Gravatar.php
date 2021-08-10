@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Baraja\Gravatar;
 
-
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Validators;
-use Nette\Caching\Storages\FileStorage;
-use Nette\Caching\Cache;
 
 
 class Gravatar
@@ -20,7 +19,7 @@ class Gravatar
 
 	public function __construct(?string $defaultIcon = null, ?string $cacheDir = null)
 	{
-		if (null !== $defaultIcon && Validators::isUrl($defaultIcon) === true) {
+		if ($defaultIcon !== null && Validators::isUrl($defaultIcon) === true) {
 			$this->defaultIcon = $defaultIcon;
 		}
 
