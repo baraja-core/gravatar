@@ -42,11 +42,20 @@ class Gravatar
 			if ($size < 1 || $size > 5000) {
 				throw new \InvalidArgumentException('Size must be in interval <1, 5000>.');
 			} else {
-				return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?s=' . $size . '&d=' . urlencode($this->defaultIcon);
+				if ($this->defaultIcon === null) {
+					return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?s=' . $size;
+				}
+				else {
+					return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?s=' . $size . '&d=' . urlencode($this->defaultIcon);
+				}
 			}
 		}
 
-		return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?d=' . urlencode($this->defaultIcon);
+		if ($this->defaultIcon !== null) {
+			return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?d=' . urlencode($this->defaultIcon);
+		}
+
+		return 'https://www.gravatar.com/avatar/' . urlencode($hash);
 	}
 
 
