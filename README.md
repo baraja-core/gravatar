@@ -10,8 +10,14 @@ It is relatively easy to use:
 ```php
 $gravatar = new Gravatar;
 
-// Get icon URL
+// Get icon URL - default icon size
 $gravatar->getIcon('jan@barasek.com');
+
+// small icon size
+$gravatar->getIcon('jan@barasek.com', 32);
+
+// big icon size
+$gravatar->getIcon('jan@barasek.com', 255);
 
 // Get user full info as GravatarResponse
 $gravatar->getUserInfo('jan@barasek.com');
