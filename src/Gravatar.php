@@ -29,7 +29,7 @@ class Gravatar
 
 		$storage = new FileStorage($cacheDir);
 
-		$this->cache = new Cache($storage, 'User Info');
+		$this->cache = new Cache($storage, 'gravatar');
 	}
 
 
@@ -38,24 +38,21 @@ class Gravatar
 		$email = $this->normalizeEmail($email);
 		$hash = md5($email);
 
+		$params = [];
+
 		if ($size !== null) {
 			if ($size < 1 || $size > 5000) {
 				throw new \InvalidArgumentException('Size must be in interval <1, 5000>.');
-			} else {
-				if ($this->defaultIcon === null) {
-					return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?s=' . $size;
-				}
-				else {
-					return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?s=' . $size . '&d=' . urlencode($this->defaultIcon);
-				}
 			}
+
+			$params['s'] = $size;
 		}
 
 		if ($this->defaultIcon !== null) {
-			return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?d=' . urlencode($this->defaultIcon);
+			$params['d'] = urlencode($this->defaultIcon);
 		}
 
-		return 'https://www.gravatar.com/avatar/' . urlencode($hash);
+		return 'https://www.gravatar.com/avatar/' . urlencode($hash) . '?' . urldecode(http_build_query($params));
 	}
 
 
