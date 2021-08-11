@@ -1,7 +1,7 @@
 {
-	"name": "baraja-core/template",
-	"description": "This is a template package.",
-	"homepage": "https://github.com/baraja-core/template",
+	"name": "baraja-core/gravatar",
+	"description": "Simple PHP API provider for getting user Gravatar and user description.",
+	"homepage": "https://github.com/baraja-core/gravatar",
 	"authors": [
 		{
 			"name": "Jan Barášek",
