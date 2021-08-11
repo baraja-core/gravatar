@@ -70,7 +70,9 @@ class Gravatar
 			}
 
 			$this->cache->save(
-				$hash, $response, [
+				$hash,
+				$response,
+				[
 					Cache::EXPIRE => '60 minutes',
 					Cache::TAGS => [$email, 'user', 'gravatar'],
 				]
