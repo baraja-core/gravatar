@@ -14,7 +14,7 @@ class Gravatar
 {
 	private ?string $defaultIcon = null;
 
-	private Cache $cache;
+	private ?Cache $cache = null;
 
 
 	public function __construct(?string $defaultIcon = null, ?string $cacheDir = null)
@@ -24,10 +24,12 @@ class Gravatar
 		}
 
 		$this->defaultIcon = $defaultIcon;
-		$cacheDir ??= sys_get_temp_dir() . '/gravatar/' . md5(__DIR__);
 
-		FileSystem::createDir($cacheDir);
-		$this->cache = new Cache(new FileStorage($cacheDir), 'gravatar');
+		if (class_exists(Cache::class)) {
+			$cacheDir ??= sys_get_temp_dir() . '/gravatar/' . md5(__DIR__);
+			FileSystem::createDir($cacheDir);
+			$this->cache = new Cache(new FileStorage($cacheDir), 'gravatar');
+		}
 	}
 
 
@@ -57,7 +59,7 @@ class Gravatar
 		$email = $this->normalizeEmail($email);
 		$hash = md5($email);
 
-		$cache = $this->cache->load($hash);
+		$cache = $this->cache === null ? null : $this->cache->load($hash);
 		if ($cache === null) {
 			try {
 				$payload = FileSystem::read('https://en.gravatar.com/' . urlencode($hash) . '.php');
@@ -69,14 +71,16 @@ class Gravatar
 				throw new \InvalidArgumentException('User "' . $email . '" does not exist.', $e->getCode(), $e);
 			}
 
-			$this->cache->save(
-				$hash,
-				$response,
-				[
-					Cache::EXPIRE => '60 minutes',
-					Cache::TAGS => [$email, 'user', 'gravatar'],
-				]
-			);
+			if ($this->cache !== null) {
+				$this->cache->save(
+					$hash,
+					$response,
+					[
+						Cache::EXPIRE => '60 minutes',
+						Cache::TAGS => [$email, 'user', 'gravatar'],
+					]
+				);
+			}
 			$cache = $response;
 		}
 
