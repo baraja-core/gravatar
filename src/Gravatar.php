@@ -81,7 +81,7 @@ class Gravatar
 				[
 					Cache::EXPIRE => '60 minutes',
 					Cache::TAGS => [$email, 'user', 'gravatar'],
-				]
+				],
 			);
 			$cache = $response;
 		}
