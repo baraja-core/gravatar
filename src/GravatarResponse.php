@@ -45,7 +45,7 @@ final class GravatarResponse
 		$this->aboutMe = $profile['entry'][0]['aboutMe'] ?? null;
 
 		foreach ($profile['entry'][0]['urls'] ?? [] as $url) {
-			$this->urls[$url['value']] = $url['title'];
+			$this->urls[(string) $url['value']] = (string) $url['title'];
 		}
 	}
 
